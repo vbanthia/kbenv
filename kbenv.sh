@@ -92,7 +92,7 @@ function kbenv_install () {
 
     if [[ -L "$KUBECTL_BINARY_PATH/kubectl" ]]
     then
-        actual_version="$(basename "$(readlink -f "$KUBECTL_BINARY_PATH/kubectl")")"
+        actual_version="$(basename "$(greadlink -f "$KUBECTL_BINARY_PATH/kubectl")")"
         echo "kubectl is pointing to the ${actual_version//kubectl-} version"
         echo "Do you want to overwrite it? (y/n)"
         read -r overwrite
@@ -130,7 +130,7 @@ function kbenv_uninstall(){
 }
 
 function kbenv_list(){
-    installed_versions="$(find "${KUBECTL_BINARY_PATH}"/ -name '*kubectl*' -printf '%f\n' | grep -Eo 'v([0-9]\.?)+$' | sed '/^$/d' | sort --version-sort)"
+    installed_versions="$(find "${KUBECTL_BINARY_PATH}"/ -name '*kubectl*' | grep -Eo 'v([0-9]\.?)+$' | sed '/^$/d' | sort --version-sort)"
     echo "$installed_versions"
 }
 
@@ -155,7 +155,7 @@ function kbenv_use(){
         return 1
     fi
 
-    actual_link="$(readlink -f "$KUBECTL_BINARY_PATH/kubectl")"
+    actual_link="$(greadlink -f "$KUBECTL_BINARY_PATH/kubectl")"
 
     if [[ "$actual_link" =~ $VERSION ]]
     then
